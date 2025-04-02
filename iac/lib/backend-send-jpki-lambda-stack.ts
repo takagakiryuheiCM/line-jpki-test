@@ -8,27 +8,17 @@ import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 
 // ① 当社からJPKIサーバーへリクエストを送信する際の固定IPは「VPC Lambda → NAT Gateway + EIP」
 // JPKIサーバーに新規申請APIを叩くLambda関数
+export interface BackendSendJpkilambdaStackProps extends cdk.StackProps {
+  vpc: ec2.Vpc; // 共通VPCを受け取るためのプロパティ
+  natGatewayEip: ec2.CfnEIP; // 共通NAT GatewayのEIPを受け取るためのプロパティ
+}
+
 export class BackendSendJpkilambdaStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: BackendSendJpkilambdaStackProps) {
     super(scope, id, props);
 
-    // VPCの作成
-    const vpc = new ec2.Vpc(this, 'JpkiVpc', {
-      maxAzs: 1, // アベイラビリティーゾーンの数
-      natGateways: 1, // NAT Gatewayの数
-      subnetConfiguration: [
-        {
-          cidrMask: 24,
-          name: 'Public',
-          subnetType: ec2.SubnetType.PUBLIC,
-        },
-        {
-          cidrMask: 24,
-          name: 'Private',
-          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
-        }
-      ],
-    });
+    // 共通VPCを使用
+    const vpc = props.vpc;
 
     // Lambda関数のセキュリティグループを作成
     const lambdaSecurityGroup = new ec2.SecurityGroup(this, 'JpkiLambdaSecurityGroup', {
@@ -63,8 +53,8 @@ export class BackendSendJpkilambdaStack extends cdk.Stack {
       }
     });
 
-    // NAT GatewayのEIPを取得（CDKが自動的に作成したもの）
-    const natGatewayEip = vpc.publicSubnets[0].node.findChild('EIP') as ec2.CfnEIP;
+    // 共通NAT GatewayのEIPを使用
+    const natGatewayEip = props.natGatewayEip;
 
     // API Gatewayの作成
     const api = new apigateway.RestApi(this, 'JpkiApi', {
