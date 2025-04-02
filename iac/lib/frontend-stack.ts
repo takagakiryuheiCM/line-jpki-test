@@ -45,12 +45,12 @@ export class FrontendStack extends cdk.Stack {
           ],
         });
     
-        // // S3 バケットへのコンテンツのデプロイ
-        // new s3_deployment.BucketDeployment(this, 'WebsiteDeploy', {
-        //   sources: [s3_deployment.Source.asset('../frontend/dist')],
-        //   destinationBucket: websiteBucket,
-        //   distribution: distribution,
-        //   distributionPaths: ['/*'],
-        // });
+        // S3 バケットへのコンテンツのデプロイ
+        new s3_deployment.BucketDeployment(this, 'WebsiteDeploy', {
+          sources: [s3_deployment.Source.asset('../frontend/dist')],
+          destinationBucket: websiteBucket,
+          distribution: distribution,
+          distributionPaths: ['/*'],
+        });
   } 
 }

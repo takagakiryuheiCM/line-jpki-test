@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import liff from "@line/liff";
 import "./App.css";
+import JpkiCallback from "./components/jpki/Callback";
 
-function App() {
+function Home() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -18,7 +20,7 @@ function App() {
         setMessage("LIFF init failed.");
         setError(`${e}`);
       });
-  });
+  }, []);
 
   return (
     <div className="App">
@@ -29,6 +31,12 @@ function App() {
           <code>{error}</code>
         </p>
       )}
+      <div>
+        <Link to="/jpki/callback?status=success">JPKIコールバックテスト（成功）</Link>
+      </div>
+      <div>
+        <Link to="/jpki/callback?status=error&message=テストエラー">JPKIコールバックテスト（エラー）</Link>
+      </div>
       <a
         href="https://developers.line.biz/ja/docs/liff/"
         target="_blank"
@@ -37,6 +45,17 @@ function App() {
         LIFF Documentation
       </a>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/jpki/callback" element={<JpkiCallback />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
