@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import liff from "@line/liff";
 import "./App.css";
-import JpkiCallback from "./components/jpki/Callback";
+import JpkiCallback from "./components/pages/jpki/Callback";
 
 function Home() {
   const [message, setMessage] = useState("");
