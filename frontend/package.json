@@ -9,6 +9,7 @@
   "dependencies": {
     "@line/liff": "2.25.1",
     "@types/react-router-dom": "^5.3.3",
+    "frontend": "file:",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-router-dom": "^7.4.1"
